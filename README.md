@@ -13,9 +13,7 @@ This repo contains an express server used to experiment with caching and service
 
 ### Creating HTTPS certificates
 
-You'll need to create some self signed https certificates too.
-[https://timonweb.com/django/https-django-development-server-ssl-certificate/](I used this tutorial) 
-to create `cert.pem` and `key.pem` files:
+You'll need to create some self signed https certificates too. [I used this tutorial](https://timonweb.com/django/https-django-development-server-ssl-certificate/ "DJango https tutorial") to create `cert.pem` and `key.pem` files:
 
 
 Run these commands:
