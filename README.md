@@ -18,6 +18,8 @@ I used this tutorial to create `cert.pem` and `key.pem` files:
 
 `https://timonweb.com/django/https-django-development-server-ssl-certificate/`
 
+Run these commands:
+
 `brew install mkcert`
 
 `mkcert -install`
