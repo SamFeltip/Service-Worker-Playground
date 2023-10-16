@@ -19,7 +19,9 @@ I used this tutorial to create `cert.pem` and `key.pem` files:
 `https://timonweb.com/django/https-django-development-server-ssl-certificate/`
 
 `brew install mkcert`
+
 `mkcert -install`
+
 `mkcert -cert-file cert.pem -key-file key.pem localhost 127.0.0.1`
 
 ### running the server
