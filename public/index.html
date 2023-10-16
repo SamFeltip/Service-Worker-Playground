@@ -5,7 +5,14 @@
   <title>service worker testing</title>
 
   <link rel="stylesheet" href="./styles/index.css">
-  <script src="./scripts/ajaxWorkers.js" defer></script>
+  <script src="./scripts/ajax.js" defer></script>
+  <link rel="icon" type="image/x-icon" href="/images/favicon.ico">
+  
+  <script>
+    if ("serviceWorker" in navigator) {
+      navigator.serviceWorker.register("./serviceworker.js");
+    }
+  </script>
 
 </head>
 

@@ -2,3 +2,8 @@
 .vscode
 package-lock.json
 .DS_Store
+server.key
+server.cert
+cert.pem
+.gitignore
+key.pem

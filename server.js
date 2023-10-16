@@ -1,10 +1,13 @@
 const express = require('express');
 const path = require('path');
 
+const fs = require("fs");
+const https = require("https");
+
 const app = express();
 const port = 3000;
 
-// return pages in the public folder (styles and scripts)
+// return files in the public folder (styles, scripts, html)
 app.use(express.static('public'))
 
 
@@ -27,6 +30,13 @@ app.get('/getAjaxData', (req, res) => {
 });
 
 
-app.listen(port, () => {
-  console.log(`Server running at http://localhost:${port}`);
+const server = https.createServer({
+  key: fs.readFileSync("key.pem"),
+  cert: fs.readFileSync("cert.pem"),
+},
+  app
+)
+
+server.listen(port, () => {
+  console.log(`Server running at https://localhost:${port}`);
 });
