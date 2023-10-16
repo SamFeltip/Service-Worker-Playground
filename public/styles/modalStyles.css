@@ -1,0 +1,66 @@
+.samModal {
+  padding: 0;
+  border-radius: 5px;
+}
+
+@keyframes show{
+  from {
+      transform: scale(0);
+  }
+
+  80% {
+    transform: scale(1.1);
+  }
+
+  to {
+    transform: scale(1);
+  }
+}
+
+.samModal[open] {
+  animation: show 0.2s ease normal;
+}
+
+
+.samModal::backdrop {
+  background: rgba(0, 0, 0, 0.5);
+}
+
+.samModal .body {
+  padding: 0.5em;
+} 
+
+.samModal .header {
+  padding: 0.5em;
+  border-bottom: 2px solid;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.samModal .header p {
+  margin: 0;
+
+}
+
+.samModal .closeModal {
+  cursor: pointer;
+}
+
+
+/* optional: while we wait for ajax, put a loading spinner in the modal body */
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.samModal .modalLoading {
+  margin: 20px auto;
+  width: 3px;
+  height: 3px;
+  padding: 10px;
+  border: 2px black solid;
+  animation: spin 2s linear infinite;
+
+}

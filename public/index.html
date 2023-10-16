@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>SamBox testing</title>
+
+  <link rel="stylesheet" href="./styles/index.css">
+  <link rel="stylesheet" href="./styles/modalStyles.css">
+
+  <script src="./scripts/modals.js" defer></script>
+
+</head>
+
+<body>
+
+  <nav>
+    <ul>
+      <li><a href="./getAjaxData">get Ajax Data</a></li>
+      <li><a href="./information">Sam's addresses</a></li>
+    </ul>
+  </nav>
+
+  <section>
+    <h2>Simple Modal</h2>
+    <button class="openModal" data-modal-id="modal1">Open Modal 1</button>
+  
+    <dialog id="modal1" class="samModal">
+        <div class="header">
+          <p>Hello, this is modal 1!</p>
+          <button class="closeModal">X</button>
+        </div>
+        <div class="body">
+          <p>Press the button to close this modal.</p>
+        </div>
+    </dialog>
+  
+    <h2>Modal with AJAX</h2>
+    <button class="openModal" data-modal-id="modal2" data-modal-url="/getAjaxData">Open Modal 2</button>
+  
+  
+    <dialog id="modal2" class="samModal">
+      <div class="header">
+        <p>Hello, this is modal 2!</p>
+        <button class="closeModal">X</button>
+      </div>
+      <div class="body">
+        <!-- this will display until the body is replaced by the AJAX request -->
+        <div class="modalLoading"></div>
+      </div>
+    </dialog>
+  
+    <h2>Auto generated Modal</h2>
+    <button class="openModal" data-modal-id="modal3" data-modal-header="Hello, this is Modal 3!">Open Modal 3</button>
+    
+    <h2>Auto generated AJAX Modal</h2>
+    <button class="openModal" data-modal-id="modal4" data-modal-header="Hello, this is Modal 4!" data-modal-url="/information">Open Modal 4</button>
+    
+  </section>
+
+  
+
+</body>
+</html>
