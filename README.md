@@ -11,7 +11,7 @@ This repo contains an express server used to experiment with caching and service
 
 `npm install`
 
-### creating HTTPS certificates
+### Creating HTTPS certificates
 
 You'll need to create some self signed https certificates too.
 I used this tutorial to create `cert.pem` and `key.pem` files:
@@ -24,7 +24,7 @@ I used this tutorial to create `cert.pem` and `key.pem` files:
 
 `mkcert -cert-file cert.pem -key-file key.pem localhost 127.0.0.1`
 
-### running the server
+### Running the server
 
 Once this is done, run this command to run the server:
 `node server.js`
