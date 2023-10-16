@@ -19,6 +19,16 @@ app.get('/information', (req, res) => {
   res.sendFile(path.join(__dirname, 'public/information.html'));
 });
 
+
+app.get('/offline', (req, res) => {
+  res.send(`
+    <div>
+      <h2>You're offline</h2>
+      <p>Sorry, I can't do requests right now</p>
+    </div>
+  `);
+});
+
 app.get('/getAjaxData', (req, res) => {
   res.send(`
     <div>

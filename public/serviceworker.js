@@ -9,7 +9,7 @@
 // The name of the cache your app uses.
 const CACHE_NAME = "my-app-cache";
 // The list of static files your app needs to start.
-const PRE_CACHED_RESOURCES = ["/styles/styles.css", "/", "/scripts/ajax.js"];
+const PRE_CACHED_RESOURCES = ["/", "/information", "/offline", "styles/index.css"];
 
 
 // this is run by the browser when the service worker (this file) is installed on the local machine
@@ -28,7 +28,63 @@ self.addEventListener("install", event => {
   event.waitUntil(preCacheResources());
 });
 
-// once installation is complete, this function is run
-self.addEventListener("activate", event => {
-  console.log("WORKER: activate event in progress.");
+
+async function navigateOrDisplayOfflinePage(event) {
+  try {
+    // Try to load the page from the network.
+    const networkResponse = await fetch(event.request);
+    return networkResponse;
+  } catch (error) {
+    // The network call failed, the device is offline.
+    const cache = await caches.open(CACHE_NAME);
+    const cachedResponse = await cache.match("/offline");
+    return cachedResponse;
+  }
+}
+
+
+async function fetchResourceOrLogError(event) {
+  try {
+    const networkResponse = await fetch(event.request);
+    return networkResponse;
+  }catch(err){
+    console.error(err);
+    return '';
+  }
+}
+
+async function fetchAjaxOrDisplayOfflineWarning(event) {
+  try {
+    // Try to load the page from the network.
+    const networkResponse = await fetch(event.request);
+    return networkResponse;
+  } catch (error) {
+    // The network call failed, the device is offline.
+    
+    const cache = await caches.open(CACHE_NAME);
+    const cachedResponse = await cache.match("/offline");
+    return cachedResponse
+  }
+}
+
+
+self.addEventListener("fetch", event => {
+
+  console.log(event.request.mode);
+
+  // when moving between pages
+  if (event.request.mode === 'navigate') {
+    event.respondWith(navigateOrDisplayOfflinePage(event));
+  }
+
+  // when fetching resources like CSS, javascript, or favicons
+  if(event.request.mode === 'no-cors') {
+    event.respondWith(fetchResourceOrLogError(event));
+  }
+
+  // when doing AJAX
+  if(event.request.mode === 'cors') {
+    event.respondWith(fetchAjaxOrDisplayOfflineWarning(event));
+  }
+
 });
