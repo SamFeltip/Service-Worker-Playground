@@ -8,10 +8,19 @@ section {
 
 nav {
   padding: 10px;
+  background-color: burlywood;
+  color: white;
 }
 
 nav ul {
   margin-block-start: 0;
   margin-block-end: 0;
   padding-inline-start: 1em;
+}
+
+#ajax-target {
+  border: 1px black solid;
+  min-height: 1em;
+  margin-top: 10px;
+  padding: 0 10px;
 }

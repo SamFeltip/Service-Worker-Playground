@@ -2,9 +2,9 @@
 
 ## Setup:
 
-`git clone https://github.com/SamFeltip/Sams-Ajax-Modal.git`
+`git clone https://github.com/SamFeltip/Service-Worker-Playground.git`
 
-`cd Sams-Ajax-Modal/`
+`cd Service-Worker-Playground/`
 
 `npm install`
 
