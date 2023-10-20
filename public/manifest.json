@@ -16,6 +16,6 @@
   "start_url": "/?pwa=true",
   "display": "minimal-ui",
 
-  "background_color": "#eeeeee",
+  "background_color": "#deb887", 
   "theme_color": "#deb887"
 }

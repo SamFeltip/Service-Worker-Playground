@@ -1,32 +1,48 @@
 // q: whats a service worker?
 // a: a service worker is a file which lives in a clients browser and intercepts network requests. 
-// the service worker can decide what to do if the user is offline, which often involes accessing some sort of cached data.
+//    the service worker can decide what to do if the user is offline, which often involes accessing some sort of cached data.
 
-// https://learn.microsoft.com/en-us/microsoft-edge/progressive-web-apps-chromium/how-to/service-workers
+// q: what happens on page load?
+// a: the first time a user joins a page, the service worker is installed. typically, the service worker is activated on page refresh or page redirect.
+//    this service worker immediately activates the service worker after it is installed
+//    this service worker takes control of the site on activation (see activation event listener), and becomes a middle man of any network requests (see fetch event listener)
+
+
 
 
 
 const CACHE_NAME = "my-app-cache";
-const PRE_CACHED_RESOURCES = ["/", "/information", "/offline",  "/offlineAjax", "/favicon.ico", "/manifest.json"];
 
+// include all the resources that will be loaded when the user visits the site for the first time
+// include all resources needed for offline use and app use
+const ALL_RESOURCES = [
+  "/styles/index.css", "/scripts/ajax.js", "/", 
+  "/favicon.ico", "/information", "/offline",  "/offlineAjax", "/manifest.json"
+]
 
-// this is run by the browser when the service worker (this file) is installed on the local machine
-self.addEventListener("install", event => {
+// this is run by the browser when the user first joins the site
+self.addEventListener("install", function (event) {
 
   async function preCacheResources() {
-    // Open the app's cache.
+
     const cache = await caches.open(CACHE_NAME);
-    // Cache all static resources.
-    cache.addAll(PRE_CACHED_RESOURCES);
-    console.log('precached the following resources: ', PRE_CACHED_RESOURCES);
+    await cache.addAll(ALL_RESOURCES);
+    
+    console.log('precached the following resources: ', ALL_RESOURCES)
   }
 
-  // without this, the service worker would not run until the user went to another page
+  // attempt to activate the service worker immediately, instead of waiting on page refresh
   self.skipWaiting();
   
+  // run preCache and do not terminate installation until it is completed
   event.waitUntil(preCacheResources());
 });
 
+
+self.addEventListener('activate', function (event) {
+// makes sure the first time you join the page, the service worker takes control of the site
+  event.waitUntil(self.clients.claim());
+});
 
 async function navigateOrDisplayOfflinePage(event) {
   console.log('navigating...', event.request.url);
@@ -62,7 +78,6 @@ async function navigateOrDisplayOfflinePage(event) {
   }
 }
 
-
 async function fetchResourceOrFetchCache(event) {
   console.log('fetching resource from network or cache (non-cors request) ', event.request.url);
 
@@ -93,7 +108,7 @@ async function fetchResourceOrFetchCache(event) {
 }
 
 async function fetchCorsOrDisplayOfflineWarning(event) {
-  console.log('doing a cross origin request, possibly with ajax or some sensitive resource (cors) ', event.request.url);
+  console.log('doing a cross origin request, possibly an ajax request (cors) ', event.request.url);
 
   const cache = await caches.open(CACHE_NAME);
 
@@ -126,7 +141,7 @@ async function fetchCorsOrDisplayOfflineWarning(event) {
 
 
 // runs whenever a network request is made
-self.addEventListener("fetch", event => {
+self.addEventListener("fetch", function (event) {
 
   console.log('requested fetch for ', event.request.url);
 
@@ -140,7 +155,7 @@ self.addEventListener("fetch", event => {
     event.respondWith(fetchResourceOrFetchCache(event));
   }
 
-  // when doing potentially risky things like AJAX
+  // when doing cross site requests (ajax is included in this)
   if(event.request.mode === 'cors') {
     event.respondWith(fetchCorsOrDisplayOfflineWarning(event));
   }
