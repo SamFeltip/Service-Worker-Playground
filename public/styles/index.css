@@ -9,13 +9,18 @@ section {
 nav {
   padding: 10px;
   background-color: burlywood;
-  color: white;
+  color: blue;
 }
 
 nav ul {
   margin-block-start: 0;
   margin-block-end: 0;
   padding-inline-start: 1em;
+}
+
+nav li {
+  height: 1.5em;
+  font-size: 1.2em;
 }
 
 #ajax-target {

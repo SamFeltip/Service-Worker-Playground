@@ -4,22 +4,16 @@
 <html lang="en">
 
 <head>
-  <title>service worker testing</title>
+  <title>offline - service worker testing</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="webpage for testing out serivce workers and PWAs">
 
   <link rel="stylesheet" href="/styles/index.css">
-  <script src="/scripts/ajax.js" defer></script>
   
   <link rel="icon" type="image/x-icon" href="/favicon.ico">
 
   <link rel="manifest" href="manifest.json">
 
-  <script>
-    if ("serviceWorker" in navigator) {
-      navigator.serviceWorker.register("./serviceworker.js");
-    }
-  </script>
 
 </head>
 
@@ -35,12 +29,8 @@
   </nav>
 
   <section>
-    <h1>Service Worker Playground</h1>
-    <h2>Do some AJAX</h2>
-    <button id="run-ajax">Do a request</button>
-
-    <div id="ajax-target"></div>
-
+    <h1>Offline</h1>
+    <p>You're offline, so you cannot access pages</p>
 
   </section>
 

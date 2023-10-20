@@ -6,10 +6,8 @@
 
 
 
-// The name of the cache your app uses.
 const CACHE_NAME = "my-app-cache";
-// The list of static files your app needs to start.
-const PRE_CACHED_RESOURCES = ["/", "/information", "/offline", "styles/index.css"];
+const PRE_CACHED_RESOURCES = ["/", "/information", "/offline",  "/offlineAjax", "/styles/index.css", "/favicon.ico", "/manifest.json"];
 
 
 // this is run by the browser when the service worker (this file) is installed on the local machine
@@ -20,6 +18,7 @@ self.addEventListener("install", event => {
     const cache = await caches.open(CACHE_NAME);
     // Cache all static resources.
     cache.addAll(PRE_CACHED_RESOURCES);
+    console.log('precached the following resources: ', PRE_CACHED_RESOURCES);
   }
 
   // without this, the service worker would not run until the user went to another page
@@ -30,47 +29,102 @@ self.addEventListener("install", event => {
 
 
 async function navigateOrDisplayOfflinePage(event) {
+  console.log('navigating...', event.request.url);
+  const cache = await caches.open(CACHE_NAME);
+
   try {
     // Try to load the page from the network.
     const networkResponse = await fetch(event.request);
-    return networkResponse;
-  } catch (error) {
-    // The network call failed, the device is offline.
-    const cache = await caches.open(CACHE_NAME);
-    const cachedResponse = await cache.match("/offline");
-    return cachedResponse;
-  }
-}
-
-
-async function fetchResourceOrLogError(event) {
-  try {
-    const networkResponse = await fetch(event.request);
-    return networkResponse;
-  }catch(err){
-    console.error(err);
-    return '';
-  }
-}
-
-async function fetchAjaxOrDisplayOfflineWarning(event) {
-  try {
-    // Try to load the page from the network.
-    const networkResponse = await fetch(event.request);
-    return networkResponse;
-  } catch (error) {
-    // The network call failed, the device is offline.
     
-    const cache = await caches.open(CACHE_NAME);
-    const cachedResponse = await cache.match("/offline");
-    return cachedResponse
+    if(networkResponse.ok){
+      console.log('got response from network ', networkResponse);
+      cache.put(event.request, networkResponse.clone()); //update cache if successful
+      console.log('successfully completed network request and cached ', event.request.url);
+    }
+
+    return networkResponse;
+  } catch (error) {
+    console.log('could not complete navigation to ', event.request.url);
+    
+    // The network call failed, the device is offline. 
+    const cachedResponse = await cache.match(event.request);
+    
+    if (cachedResponse) {
+      console.log('found cache match for ', event.request.url);
+      
+      return cachedResponse;
+    } else {
+      // If both network and cache fail, send a generic fallback:
+      console.error('could not find cache of ', event.request.url);
+      return caches.match('/offline');
+    }
+  }
+}
+
+
+async function fetchResourceOrFetchCache(event) {
+  console.log('fetching resource from network or cache (non-cors request) ', event.request.url);
+
+  const cache = await caches.open(CACHE_NAME);
+
+  try {
+    const networkResponse = await fetch(event.request);
+    cache.put(event.request, networkResponse.clone()); //update cache if successful
+    console.log('successfully completed network request and cached ', event.request.url);
+    return networkResponse;
+
+  }catch(err){
+    console.log('could not fetch resource from network ', event.request.url);
+
+    const cachedResponse = await cache.match(event.request);
+    
+    if (cachedResponse) {
+      console.log('found cache match for ', event.request.url);
+      return cachedResponse;
+    } else {
+      // If both network and cache fail, send a generic fallback:
+      console.error('could not find cache of ', event.request.url);
+      return caches.match('/offlineAjax');
+    }
+
+  }
+}
+
+async function fetchCorsOrDisplayOfflineWarning(event) {
+  console.log('doing a cross origin request, possibly with ajax or some sensitive resource (cors) ', event.request.url);
+
+  const cache = await caches.open(CACHE_NAME);
+
+  try {
+    
+    const networkResponse = await fetch(event.request);
+    // cache.put(event.request, networkResponse.clone()); //update cache if successful
+    // console.log('successfully completed network request and cached ', event.request.url);
+    
+    console.log('successfully completed network request ', event.request.url);
+    return networkResponse;
+
+  }catch(err){
+    console.log('could not fetch resource from network ', event.request.url);
+    
+    const cachedResponse = await cache.match(event.request);
+    
+    if (cachedResponse) {
+      console.log('found cache match for ', event.request.url);
+      return cachedResponse;
+    } else {
+      // If both network and cache fail, send a generic fallback:
+      console.error('could not find cache of ', event.request.url);
+      return caches.match('/offlineAjax');
+    }
+
   }
 }
 
 
 self.addEventListener("fetch", event => {
 
-  console.log(event.request.mode);
+  console.log('requested fetch for ', event.request.url);
 
   // when moving between pages
   if (event.request.mode === 'navigate') {
@@ -79,12 +133,12 @@ self.addEventListener("fetch", event => {
 
   // when fetching resources like CSS, javascript, or favicons
   if(event.request.mode === 'no-cors') {
-    event.respondWith(fetchResourceOrLogError(event));
+    event.respondWith(fetchResourceOrFetchCache(event));
   }
 
   // when doing AJAX
   if(event.request.mode === 'cors') {
-    event.respondWith(fetchAjaxOrDisplayOfflineWarning(event));
+    event.respondWith(fetchCorsOrDisplayOfflineWarning(event));
   }
 
 });

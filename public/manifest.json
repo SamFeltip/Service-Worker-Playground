@@ -1,0 +1,13 @@
+{
+  "short_name": "ssServiceWorkerPlayground",
+  "name": "System Serve Service worker playground",
+  "icons": [
+    {
+      "src": "/favicon.ico",
+      "type": "image/x-icon",
+      "sizes": "512x512"
+    }
+  ],
+  "start_url": "/?pwa=true",
+  "display": "minimal-ui"
+}
