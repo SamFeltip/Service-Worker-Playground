@@ -44,6 +44,12 @@ self.addEventListener('activate', function (event) {
   event.waitUntil(self.clients.claim());
 });
 
+
+
+
+
+
+
 async function navigateOrDisplayOfflinePage(event) {
   console.log('navigating...', event.request.url);
   const cache = await caches.open(CACHE_NAME);
