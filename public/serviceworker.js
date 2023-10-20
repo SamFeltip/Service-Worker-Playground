@@ -7,7 +7,7 @@
 
 
 const CACHE_NAME = "my-app-cache";
-const PRE_CACHED_RESOURCES = ["/", "/information", "/offline",  "/offlineAjax", "/styles/index.css", "/favicon.ico", "/manifest.json"];
+const PRE_CACHED_RESOURCES = ["/", "/information", "/offline",  "/offlineAjax", "/favicon.ico", "/manifest.json"];
 
 
 // this is run by the browser when the service worker (this file) is installed on the local machine
@@ -55,7 +55,8 @@ async function navigateOrDisplayOfflinePage(event) {
       return cachedResponse;
     } else {
       // If both network and cache fail, send a generic fallback:
-      console.error('could not find cache of ', event.request.url);
+      console.log('could not find cache of ', event.request.url);
+      console.log('fallback to generic offline page');
       return caches.match('/offline');
     }
   }
@@ -83,7 +84,8 @@ async function fetchResourceOrFetchCache(event) {
       return cachedResponse;
     } else {
       // If both network and cache fail, send a generic fallback:
-      console.error('could not find cache of ', event.request.url);
+      console.log('could not find cache of ', event.request.url);
+      console.log('fallback to generic offline ajax');
       return caches.match('/offlineAjax');
     }
 
@@ -114,7 +116,8 @@ async function fetchCorsOrDisplayOfflineWarning(event) {
       return cachedResponse;
     } else {
       // If both network and cache fail, send a generic fallback:
-      console.error('could not find cache of ', event.request.url);
+      console.log('could not find cache of ', event.request.url);
+      console.log('fallback to generic offline ajax');
       return caches.match('/offlineAjax');
     }
 
@@ -122,6 +125,7 @@ async function fetchCorsOrDisplayOfflineWarning(event) {
 }
 
 
+// runs whenever a network request is made
 self.addEventListener("fetch", event => {
 
   console.log('requested fetch for ', event.request.url);
@@ -131,12 +135,12 @@ self.addEventListener("fetch", event => {
     event.respondWith(navigateOrDisplayOfflinePage(event));
   }
 
-  // when fetching resources like CSS, javascript, or favicons
+  // when fetching unimportant resources like CSS, javascript, or favicons
   if(event.request.mode === 'no-cors') {
     event.respondWith(fetchResourceOrFetchCache(event));
   }
 
-  // when doing AJAX
+  // when doing potentially risky things like AJAX
   if(event.request.mode === 'cors') {
     event.respondWith(fetchCorsOrDisplayOfflineWarning(event));
   }

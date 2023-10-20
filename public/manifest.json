@@ -6,8 +6,16 @@
       "src": "/favicon.ico",
       "type": "image/x-icon",
       "sizes": "512x512"
+    },
+    {
+      "src": "/images/favicon.png",
+      "type": "image/png",
+      "sizes": "512x512"
     }
   ],
   "start_url": "/?pwa=true",
-  "display": "minimal-ui"
+  "display": "minimal-ui",
+
+  "background_color": "#eeeeee",
+  "theme_color": "#deb887"
 }

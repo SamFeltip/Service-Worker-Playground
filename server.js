@@ -12,25 +12,25 @@ app.use(express.static('public'))
 
 
 app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public/index.html'));
+  res.sendFile(path.join(__dirname, 'public/pages/index.html'));
 });
 
 app.get('/information', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public/information.html'));
+  res.sendFile(path.join(__dirname, 'public/pages/information.html'));
 });
 
 
 app.get('/extras', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public/extraPage.html'));
+  res.sendFile(path.join(__dirname, 'public/pages/extraPage.html'));
 });
 
 
 app.get('/offline', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public/offline.html'));
+  res.sendFile(path.join(__dirname, 'public/pages/offline.html'));
 });
 
 app.get('/offlineAjax', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public/offlineAJAX.html'));
+  res.sendFile(path.join(__dirname, 'public/pages/offlineAJAX.html'));
 });
 
 app.get('/getAjaxData', (req, res) => {
